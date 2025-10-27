@@ -11,7 +11,7 @@ html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Arial;color:
 body::before{
   content:"";
   position:fixed;inset:0;
-  background-image: url(https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.harrypotter.com%2Ffact-file%2Fspells%2Fthe-unlocking-charm&psig=AOvVaw3S_TRF_dOWqxNLilBYYw3P&ust=1761688791081000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCPCH2KOwxZADFQAAAAAdAAAAABAE);
+  background-image: url("/background.jpg");
   background-size:cover;
   background-position:center;
   filter: blur(28px) brightness(0.35);
@@ -88,6 +88,7 @@ button{
 .overlay-card{
   background:#0b0b0d;color:#fff;padding:28px;border-radius:12px;max-width:640px;text-align:center;border:1px solid rgba(255,255,255,0.04);
 }
+
 
 
 
