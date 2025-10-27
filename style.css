@@ -11,7 +11,7 @@ html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Arial;color:
 body::before{
   content:"";
   position:fixed;inset:0;
-  background-image: var(--bg);
+  background-image: url(/images/background.jpeg);
   background-size:cover;
   background-position:center;
   filter: blur(28px) brightness(0.35);
@@ -88,3 +88,4 @@ button{
 .overlay-card{
   background:#0b0b0d;color:#fff;padding:28px;border-radius:12px;max-width:640px;text-align:center;border:1px solid rgba(255,255,255,0.04);
 }
+
