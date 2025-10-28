@@ -1,24 +1,38 @@
 // api/submit.js
-import fetch from 'node-fetch';
-
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  // Add CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Handle OPTIONS request for CORS preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     const name = (body.name || '').toString().trim().slice(0, 128);
     const answer = (body.answer || '').toString().trim().slice(0, 128);
 
-    if (!name || !answer) return res.status(400).json({ success: false });
+    if (!name || !answer) {
+      return res.status(400).json({ success: false });
+    }
 
     // Basic length / content checks
-    if (name.length < 1 || answer.length < 1) return res.status(400).json({ success: false });
+    if (name.length < 1 || answer.length < 1) {
+      return res.status(400).json({ success: false });
+    }
 
     // Secret stored in environment
     const secret = (process.env.SECRET_WORD || '').toString().trim();
     if (!secret) {
       console.error('SECRET_WORD not set');
-      return res.status(500).json({ success: false });
+      return res.status(500).json({ success: false, error: 'Configuration error' });
     }
 
     // Case-insensitive comparison
@@ -30,37 +44,34 @@ export default async function handler(req, res) {
     }
 
     // Correct answer: prepare payload to forward
-    const timestamp = new Date().toISOString(); // UTC ISO8601
+    const timestamp = new Date().toISOString();
     const payload = {
       name,
       timestamp,
       source: 'puzzle-site',
-      // optionally include limited metadata
     };
 
     const logEndpoint = process.env.LOG_ENDPOINT;
     if (!logEndpoint) {
       console.error('LOG_ENDPOINT not set; would have forwarded:', payload);
-      // still return success so user sees overlay; you'll need to set LOG_ENDPOINT
       return res.status(200).json({ success: true });
     }
 
-    // Forward to the configured endpoint. Include optional auth header.
+    // Forward to the configured endpoint
     const headers = { 'Content-Type': 'application/json' };
     if (process.env.LOG_AUTH_TOKEN) {
       headers['Authorization'] = `Bearer ${process.env.LOG_AUTH_TOKEN}`;
     }
 
-    // Send the ping (don't fail to user on remote errors, but log)
     try {
-      const r = await fetch(logEndpoint, {
+      const response = await fetch(logEndpoint, {
         method: 'POST',
         headers,
         body: JSON.stringify(payload),
-        // small timeout is advisable but node-fetch needs extra code for timeout; skip here
       });
-      if (!r.ok) {
-        console.error('Forward failed', r.status, await r.text());
+      
+      if (!response.ok) {
+        console.error('Forward failed', response.status, await response.text());
       }
     } catch (err) {
       console.error('Error forwarding to LOG_ENDPOINT', err);
@@ -69,7 +80,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true });
 
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ success: false });
+    console.error('Handler error:', err);
+    return res.status(500).json({ success: false, error: 'Server error' });
   }
 }
