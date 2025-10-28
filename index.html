@@ -10,14 +10,17 @@
   <img src="/background.jpg" alt="" class="bg-image" style="position:fixed;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(8px) brightness(0.6);z-index:-2;image-rendering:pixelated;" />
   <img src="/3302.jpg" alt="" class="bg-img"/>
   <main class="center">
-    <form id="puzzleForm" autocomplete="off" novalidate>
-      <label class="label">Say the word:</label>
-      <input id="answer" name="answer" maxlength="64" required />
+   <form id="puzzleForm" autocomplete="off" novalidate>
+  <label class="label">Your Name:</label>
+  <input id="name" name="name" maxlength="64" required />
 
-      <button id="submitBtn" type="submit">Enter</button>
+  <label class="label">Say the word:</label>
+  <input id="answer" name="answer" maxlength="64" required />
 
-      <div id="msg" aria-live="polite"></div>
-    </form>
+  <button id="submitBtn" type="submit">Enter</button>
+
+  <div id="msg" aria-live="polite"></div>
+</form>
   </main>
 
   <div id="overlay" class="overlay hidden">
