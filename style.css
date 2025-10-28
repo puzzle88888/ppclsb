@@ -1,5 +1,5 @@
 :root{
-  --bg: url('/background.jpg'); /* replace if needed */
+  --bg: url('public/background.jpg'); /* replace if needed */
   --accent: #c9a86a;
   --muted: #bdbdbd;
   --bg-dark: #050507;
@@ -88,6 +88,7 @@ button{
 .overlay-card{
   background:#0b0b0d;color:#fff;padding:28px;border-radius:12px;max-width:640px;text-align:center;border:1px solid rgba(255,255,255,0.04);
 }
+
 
 
 
